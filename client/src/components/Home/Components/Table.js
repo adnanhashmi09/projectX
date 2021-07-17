@@ -126,7 +126,7 @@ const getRows = async() =>{
 
 const CollapsibleTable = () =>{
 
-  // rows has been initialized to an empty array
+  // rows has been initi qalized to an empty array
   const [rows,setRows] = useState([])
   //useEffect fetches the data from backend server(vis getRows) and updates the state upon receiving
   //this then rerenders the table and along with user's activities                                                     
