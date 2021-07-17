@@ -22,29 +22,34 @@ app.get('/api/testdb', async (req,res) => {
 
         currentYear : 4,
         department : 'Script',
-        // designation : 'President',
+        designation : 'President',
 
-        // Work : [
-        // {
-        //     Title:'ProjectX',
-        //     Description:'A WebApp for Ashwamedh',
-        //     Category : 'Tech',
-        // },
-        // {
-        //     Title:'ProjectXY',
-        //     Description:'A WebApp for Ashwamedh',
-        //     Category : 'Tech',
-        // },
-    // ]
+        work : [
+        {
+            title:'ProjectX',
+            description:'A WebApp for Ashwamedh',
+            category : 'Tech',
+        },
+        {
+            title:'ProjectXY',
+            description:'A WebApp for Ashwamedh',
+            category : 'Tech',
+        },
+    ]
     }).save()
-    console.log(userSaved)
-    // return res.send("userSaved")
+   
+    // console.log(userSaved)
+    return res.send(userSaved)
 });
-app.get('/api/usersz',async (req,res)=>{
-        const user = await User.findOne({name:'Priyansh'});
+app.get('/api/delete',async (req,res)=>{
+        const user = await User.deleteMany({name:'Priyansh'});
         return res.send(user);
     }
 )
+app.get('/api/getUsers',async(req,res)=>{
+    const users = await User.find({name:'Priyansh'});
+    return res.send(users)
+})
 
 const PORT = process.env.port | 5000
 app.listen(PORT)

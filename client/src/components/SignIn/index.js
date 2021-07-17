@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Router, Link, Redirect } from 'react-router-dom';
 import FirebaseContext from '../Firebase/Context';
 import * as ROUTES from '../../Constants/routes'
+import {  withRouter, Redirect } from 'react-router-dom';
 
 
 const INITIAL_STATE = {
@@ -11,9 +11,9 @@ const INITIAL_STATE = {
     redirect : false,
 }
 
-class SignInForm extends Component{
-    constructor(){
-        super()
+class SignInPage extends Component{
+    constructor(props){
+        super(props)
         this.state = {...INITIAL_STATE}
     }
     onSubmit = (e) => {
@@ -39,11 +39,12 @@ class SignInForm extends Component{
         const {email, password, error} = this.state;
         const isInvalid = password === '' || email === ''
 
-        // if(this.state.redirect){
-        //     return(
-        //         <Redirect to = {ROUTES.HOME}/>
-        //     )
-        // }
+        if(this.state.redirect){
+            return(
+                <Redirect to = {ROUTES.HOME}/>
+            )
+            // this.props.history.push('/home')
+        }
         return(
             <form onSubmit = {this.onSubmit}>
                 <input 
@@ -66,5 +67,5 @@ class SignInForm extends Component{
         )
     }
 };
-SignInForm.contextType = FirebaseContext;
-export default SignInForm
+SignInPage.contextType = FirebaseContext;
+export default withRouter(SignInPage)
