@@ -25,8 +25,6 @@ const DrawerMenu = [
     {text : 'Activity'},
     {text : 'Requests'},
     {text : 'Stats'},
-    {text : 'Profile'},
-    {text : 'Test'},
 ]
 
 const useStyles = makeStyles((theme) => ({
