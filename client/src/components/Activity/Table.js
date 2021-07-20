@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -18,6 +18,7 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import axios from 'axios';
 import { useState } from 'react';
+import ActivityContext from '../../Contexts/ActivityContext';
 
 const useButtonStyles = makeStyles({
     outer:{
@@ -113,10 +114,20 @@ Row.propTypes = {
   }).isRequired,
 };
 
-const getRows = async() =>{
-  const response = await axios.get('/api/getUsers')
-  const data = response.data[0].work;
-  // console.log('data',data) 
+// const getRows = async() =>{
+//   const response = await axios.get('/api/getUsers')
+//   const data = response.data[0].work;
+//   let res = []
+//   data.forEach(doc => {
+//     res.push(createData(doc));
+//   });
+//   return res
+// }
+const getRows = (response) =>{
+  // const response = await axios.get('/api/getUsers')
+  if(!response) return []
+  console.log('resp',response)
+  const data = response.work;
   let res = []
   data.forEach(doc => {
     res.push(createData(doc));
@@ -124,23 +135,20 @@ const getRows = async() =>{
   return res
 }
 
-const CollapsibleTable = () =>{
-
-  // rows has been initi qalized to an empty array
+const CollapsibleTable = (props) =>{
+  // rows has been initialized to an empty array
   const [rows,setRows] = useState([])
-  //useEffect fetches the data from backend server(vis getRows) and updates the state upon receiving
-  //this then rerenders the table and along with user's activities                                                     
+
+  //response is the data sent back by the backend server.
+  const response = useContext(ActivityContext)
+  //useEffect re renders everytime response is changed.
+  //this then rerenders the table and along with user's activities   
+
   useEffect(()=>{
-    async function fetchData(){
-      try{
-        const data = await getRows()
-        setRows(data)
-      }catch(e){
-        console.log(e)
-      }
-    }
-    fetchData()
-  },[])
+    let data = getRows(response)
+    setRows(data)
+  },[response])                                               
+  // console.log(data);
 
   const classes = useButtonStyles()
   return (
