@@ -116,13 +116,14 @@ const CollapsibleTable = (props) =>{
   //useEffect re renders everytime [authUser,refresh] is changed.
   //this then rerenders the table and along with user's activities   
 
-  const authUser = useContext(AuthUserContext);
+  const authUser = useContext(AuthUserContext).authUser;
   useEffect(()=>{
     const fetchRowData = async () =>{
       setIsTableReady(false)
       if(!authUser) return
-      const res = await axios.get(`/api/${authUser.uid}/getUserActivity`)
-      setRows(getRows("Pending",res.data))
+      // const res = await axios.get(`/api/${authUser.uid}/getUserActivity`)
+      const res = authUser.work
+      setRows(getRows("Pending",res))
       setIsTableReady(true)
     }
     fetchRowData()

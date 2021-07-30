@@ -6,6 +6,7 @@ export default function getRows(status,data){
         if(doc.status === status || status == 'Total') userActivity.push(createData(doc));
         
     });
+    userActivity.reverse()
     return userActivity
 }
 

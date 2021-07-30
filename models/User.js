@@ -4,7 +4,7 @@ const {Schema} = mongoose;
 //This shchema defines the input structure for the user
 const userSchema = new Schema({
     //personal details
-    _id : String,
+    uid : String,
     name : String,
     email : String,
     rollNumber : String,
@@ -18,9 +18,9 @@ const userSchema = new Schema({
     // Activity
     work : [{
         title : String,
-        description:String,
-        category:String,
-        status:String,
+        description : String,
+        category : String,
+        status : String,
         dateIssued : Date,
         dateApproved : Date,
     }]

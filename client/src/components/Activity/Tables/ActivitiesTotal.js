@@ -42,16 +42,6 @@ const useRowStyles = makeStyles({
   },
 });
 
-// function createData(doc) {
-//   const {title,description,category,status,dateIssued} = doc
-//   return {
-//     title,
-//     category,
-//     date:dateIssued ? dateIssued.substring(0,10) :'',
-//     status,
-//     history:description
-//   };
-// }
 
 function Row(props) {
   const { row } = props;
@@ -110,16 +100,6 @@ Row.propTypes = {
 };
 
 
-// const getRows = (res) =>{
-//   if(!res) return []
-//   const data = res;
-//   let userActivity = []
-//   data.forEach(doc => {
-//     userActivity.push(createData(doc));
-//   });
-//   return userActivity
-// }
-
 const CollapsibleTable = (props) =>{
   // rows has been initialized to an empty array
   const [rows,setRows] = useState([])
@@ -135,17 +115,18 @@ const CollapsibleTable = (props) =>{
   //useEffect re renders everytime [authUser,refresh] is changed.
   //this then rerenders the table and along with user's activities   
 
-  const authUser = useContext(AuthUserContext);
+  const authUser = useContext(AuthUserContext).authUser;
   useEffect(()=>{
     const fetchRowData = async () =>{
       setIsTableReady(false)
       if(!authUser) return
-      const res = await axios.get(`/api/${authUser.uid}/getUserActivity`)
-      setRows(getRows("Total",res.data))
+      // const res = await axios.get(`/api/${authUser.uid}/getUserActivity`)
+      const res = authUser.work
+      setRows(getRows("Total",res))
       setIsTableReady(true)
     }
     fetchRowData()
-  },[authUser])                                               
+  },[authUser,refresh])                                               
 
   const classes = useButtonStyles()
   return (

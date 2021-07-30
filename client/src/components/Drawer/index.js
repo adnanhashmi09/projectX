@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,15 +16,24 @@ import ListItem from '@material-ui/core/ListItem';
 import { ListItemText } from '@material-ui/core';
 import Activity from '../Activity'
 import { BrowserRouter, Route, Link } from 'react-router-dom';
-
+import AuthUserContext from '../../Contexts/AuthUserContext';
 
 const drawerWidth = 240;
 
 // A menu for browser that routes to specific components
+const minimumRequiredYear = 2;
 const DrawerMenu = [
-    {text : 'Activity'},
-    {text : 'Requests'},
-    {text : 'Stats'},
+    {
+      text : 'Activity',
+    },
+    {
+      text : 'Requests',
+      year : minimumRequiredYear,
+    },
+    {
+      text : 'Stats',
+      year : minimumRequiredYear,
+    },
 ]
 
 const useStyles = makeStyles((theme) => ({
@@ -89,6 +98,7 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const authUser = useContext(AuthUserContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -155,7 +165,8 @@ export default function PersistentDrawerLeft() {
         })}
       >
         <div className={classes.drawerHeader} />
-            <Route path = "/home/activity" render = { () => <Activity/>}/>
+            {/* {authUser ? `${authUser.username}` : "User Not Found"} */}
+            <Route exact path = "/home/activity" render = { () => <Activity/>}/>
       </main>
     </div>
     </BrowserRouter>

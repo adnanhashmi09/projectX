@@ -68,7 +68,9 @@ render(){
     const onSubmit = (e) =>{
         e.preventDefault()
         handleClose();
-        const authUser = this.context
+        const authUser = this.context.authUser
+        const setAuthUser = this.context.setAuthUser
+
         const send = {
             title:this.state.title,
             description:this.state.description,
@@ -80,7 +82,8 @@ render(){
         const url = `/api/${authUser.uid}/addWork`
         axios.post(url,{
             work:[send]
-        }).then(()=>{
+        }).then((authUser)=>{
+            setAuthUser(authUser.data);
             this.props.refreshTable();
         }).then( this.setState({isLoading:false}))
     
@@ -101,7 +104,7 @@ render(){
                 onClose={handleClose}
             >
                 <div style={modalStyle} className={classes.paper}>
-                    <h2>Simple React Modal</h2>
+                    <h2>Add Activity</h2>
                     <form onSubmit = {onSubmit} >
                         <label>
                             Title

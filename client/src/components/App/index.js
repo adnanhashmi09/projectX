@@ -25,8 +25,12 @@ class App extends Component{
       //it changes the state every time someone logs-in or logs-out.
       this.listener = firebase.auth.onAuthStateChanged(authUser=>{
         authUser 
-          ? this.setState({authUser}) 
+          ? axios.get(`/api/${authUser.uid}/getUser`).then( (res)=> {
+              this.setState({authUser:res.data})
+            })
           : this.setState({authUser:null})
+        //second opertation
+        //this fethes the currentUser from backend and sets the state
       });
       
     }
@@ -36,9 +40,8 @@ class App extends Component{
   
   render(){
     let firebase = this.context;
-    
     return(
-      <AuthUserContext.Provider value = {this.state.authUser}>
+      <AuthUserContext.Provider value = {{authUser:this.state.authUser,setAuthUser:(authUser)=>{this.setState({authUser})}}}>
         <Router>
           <div>
             <ActivityContext.Provider value =  {this.state.userData}>
