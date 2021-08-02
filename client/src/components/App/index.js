@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import SignInPage from '../SignIn'
 import Drawer from '../Drawer'
 import axios from 'axios'
-import ActivityContext from '../../Contexts/ActivityContext';
 import FirebaseContext from '../Firebase/Context';
 import { Link } from 'react-router-dom';
 import AuthUserContext from '../../Contexts/AuthUserContext';
+import TeamDataContext from '../../Contexts/TeamDataContext'
 
 class App extends Component{
     constructor(){
@@ -16,7 +16,19 @@ class App extends Component{
         res:null,
         userData:null,
         authUser :null,
+        teamData:[],
       }
+    }
+    setupContexts = (authUser) =>{
+      // console.log("AU",authUser.uid)
+      axios.get(`/api/${authUser.uid}/getUser`).then( (res)=> {
+        // console.log('response',res.data)
+        this.setState({authUser:res.data})
+      }).then(
+        axios.get('/api/getTeamData').then((res)=>{
+          this.setState({teamData:res.data})
+        })
+      )
     }
     componentDidMount(){
       
@@ -25,9 +37,7 @@ class App extends Component{
       //it changes the state every time someone logs-in or logs-out.
       this.listener = firebase.auth.onAuthStateChanged(authUser=>{
         authUser 
-          ? axios.get(`/api/${authUser.uid}/getUser`).then( (res)=> {
-              this.setState({authUser:res.data})
-            })
+          ? this.setupContexts(authUser)
           : this.setState({authUser:null})
         //second opertation
         //this fethes the currentUser from backend and sets the state
@@ -40,14 +50,15 @@ class App extends Component{
   
   render(){
     let firebase = this.context;
+    // console.log(this.state.teamData)
     return(
       <AuthUserContext.Provider value = {{authUser:this.state.authUser,setAuthUser:(authUser)=>{this.setState({authUser})}}}>
         <Router>
           <div>
-            <ActivityContext.Provider value =  {this.state.userData}>
-              <Route  path = "/home" render = {() =><Drawer/> }/>
-              <Route exact path = {ROUTES.SIGN_IN} component = {SignInPage}/>
-            </ActivityContext.Provider>
+            <TeamDataContext.Provider value = {this.state.teamData}>
+                <Route  path = "/home" render = {() =><Drawer/> }/>
+                <Route exact path = {ROUTES.SIGN_IN} component = {SignInPage}/>
+            </TeamDataContext.Provider>
           </div>
       </Router>
     </AuthUserContext.Provider>

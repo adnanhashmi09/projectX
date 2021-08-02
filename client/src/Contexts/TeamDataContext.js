@@ -1,5 +1,5 @@
 import React, { Component, createContext } from 'react';
 import { Context } from 'react';
 
-const ActivityContext = createContext(null)
-export default ActivityContext
+const TeamDataContext = createContext(null)
+export default TeamDataContext

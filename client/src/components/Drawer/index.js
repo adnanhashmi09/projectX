@@ -15,8 +15,10 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import { ListItemText } from '@material-ui/core';
 import Activity from '../Activity'
+import ActivityTeam from '../ActivityTeam';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import AuthUserContext from '../../Contexts/AuthUserContext';
+import Home  from '../Home';
 
 const drawerWidth = 240;
 
@@ -34,6 +36,19 @@ const DrawerMenu = [
       text : 'Stats',
       year : minimumRequiredYear,
     },
+]
+const DrawerMenuTeam = [
+  {
+    text : 'Activity',
+  },
+  {
+    text : 'Requests',
+    year : minimumRequiredYear,
+  },
+  {
+    text : 'Stats',
+    year : minimumRequiredYear,
+  },
 ]
 
 const useStyles = makeStyles((theme) => ({
@@ -155,6 +170,13 @@ export default function PersistentDrawerLeft() {
           ))}
         </List>
         <Divider />
+        <List>
+          {DrawerMenuTeam.map((e) => (
+            <ListItem button key={e.text} component = {Link} to = {"/home/team/" + e.text.toLowerCase()}>
+              <ListItemText primary={e.text} />
+            </ListItem>
+          ))}
+        </List>
             
       </Drawer>
 
@@ -165,8 +187,11 @@ export default function PersistentDrawerLeft() {
         })}
       >
         <div className={classes.drawerHeader} />
-            {/* {authUser ? `${authUser.username}` : "User Not Found"} */}
+            <Route exact path = "/home" render = { () => <Home/>}/>
             <Route exact path = "/home/activity" render = { () => <Activity/>}/>
+            {/* ************************************************************ */}
+            <Route exact path = "/home/team/activity" render = { () => <ActivityTeam/>}/>
+
       </main>
     </div>
     </BrowserRouter>
