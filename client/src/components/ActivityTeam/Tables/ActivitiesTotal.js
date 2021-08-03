@@ -3,10 +3,25 @@ import { useState } from 'react';
 import AuthUserContext from '../../../Contexts/AuthUserContext';
 import getRows  from './getRows';
 import TeamDataContext from '../../../Contexts/TeamDataContext';
-import CreateTable from './getTable';
+import GetTable from './getTable';
+import Filters from './Filters'
 
+const CollapsibleTable = () =>{
 
-const CollapsibleTable = (props) =>{
+  //setting up props for filters
+  const [status,setStatus] = useState('')
+  const [user,setUser] = useState('');
+  let props = {
+    status,
+    setStatus,
+    user,
+    setUser
+  }
+  let filters = {
+    status,
+    user,
+  }
+
   // rows has been initialized to an empty array
   const [rows,setRows] = useState([])
   const [isTableReady,setIsTableReady] = useState(false);
@@ -25,18 +40,21 @@ const CollapsibleTable = (props) =>{
   const teamData = useContext(TeamDataContext);
 
   useEffect(()=>{
-    const fetchRowData = () =>{
+      console.log(filters)
       setIsTableReady(false)
       if(!authUser) return
       const res = teamData
-      setRows(getRows("Total",res,authUser))
+      setRows(getRows(res,authUser,filters));
       setIsTableReady(true)
-    }
-    fetchRowData()
-  },[authUser,refresh])                                               
+
+  },[authUser,refresh,status,user])                                               
 
   return (
-    <CreateTable rows = {rows}/>
+    <div>
+      {/* this is the parent component for Filters and GetTable */}
+      <Filters {...props}/>
+      <GetTable rows = {rows}/>
+    </div>
   )
 }
 export default CollapsibleTable

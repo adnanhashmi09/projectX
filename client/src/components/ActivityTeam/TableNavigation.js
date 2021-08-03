@@ -7,12 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import ActivitiesTotal from './Tables/ActivitiesTotal';
-import ActivitiesPending from './Tables/ActivitiesPending'
-import ActivitiesApproved from './Tables/ActivitiesApproved';
-import ActivitiesDenied from './Tables/ActivitiesDenied';
-import Modal from './Modal';
-import axios from 'axios'
-
+import Filters from './Tables/Filters'
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -73,22 +68,10 @@ export default function SimpleTabs(props) {
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" className = {classes.tabs}>
           <Tab label="Activities" {...a11yProps(0)} />
-          <Tab label="Pending" {...a11yProps(1)} />
-          <Tab label="Approved" {...a11yProps(2)} />
-          <Tab label="Denied" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         <ActivitiesTotal/>
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <ActivitiesPending/>
-      </TabPanel>
-      <TabPanel value={value} index={2}>
-          <ActivitiesApproved/>
-      </TabPanel>
-      <TabPanel value={value} index={3}>
-          <ActivitiesDenied/>
       </TabPanel>
     </div>
   );
