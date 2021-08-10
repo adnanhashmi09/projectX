@@ -30,7 +30,7 @@ const getOptions = (teamData) =>{
 }
 export default function NativeSelects(props) {
   const classes = useStyles();
-  const teamData = useContext(TeamDataContext);
+  const teamData = useContext(TeamDataContext).teamData;
   const options = getOptions(teamData);
   const {user,setUser} = props;
   const {status,setStatus} = props;
@@ -70,7 +70,7 @@ export default function NativeSelects(props) {
           id="controllable-states-demo"
           options={options}
           style={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Controllable" variant="outlined" />}
+          renderInput={(params) => <TextField {...params} label="Select User" variant="outlined" />}
         />
       </FormControl>
     </div>

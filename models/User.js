@@ -23,6 +23,13 @@ const userSchema = new Schema({
         status : String,
         dateIssued : Date,
         dateApproved : Date,
+        approvers :[{
+            name:String,
+        }],
+        comments:[{
+            name:String,
+            text:String,
+        }]
     }]
     //scores
 });

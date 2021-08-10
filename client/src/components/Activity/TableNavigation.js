@@ -10,8 +10,6 @@ import ActivitiesTotal from './Tables/ActivitiesTotal';
 import ActivitiesPending from './Tables/ActivitiesPending'
 import ActivitiesApproved from './Tables/ActivitiesApproved';
 import ActivitiesDenied from './Tables/ActivitiesDenied';
-import Modal from './Modal';
-import axios from 'axios'
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

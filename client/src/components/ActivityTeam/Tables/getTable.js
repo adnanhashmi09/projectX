@@ -14,7 +14,9 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-
+import AuthUserContext from '../../../Contexts/AuthUserContext'
+import ProcessActivity from './ProcessActivity';
+import CommentBox from './CommentBox'
 const useButtonStyles = makeStyles({
     outer:{
         display:'flex',
@@ -36,8 +38,26 @@ const useRowStyles = makeStyles({
   },
 });
 
+const GetApprovalCell =()=>{
+  const authUser = useContext(AuthUserContext).authUser;
+  if(!authUser) return null;
+
+  return(
+    <TableCell align = 'right'>Approve</TableCell>
+  )
+}
+function GetApprovalCellButton(){
+  const authUser = useContext(AuthUserContext).authUser
+  if(!authUser) return null
+  return(
+    <TableCell align = 'right' >
+      <ProcessActivity/>
+    </TableCell>
+  )
+}
+
 function Row(props) {
-  const { row } = props;
+  const { row } = props; //row data received as props
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
@@ -55,16 +75,20 @@ function Row(props) {
     <TableCell align="right">{row.category}</TableCell>
     <TableCell align="right">{row.date}</TableCell>
     <TableCell align="right">{row.status}</TableCell>
+    {GetApprovalCellButton()}
     </TableRow>
     <TableRow>
     {/* dropdown */}
-    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+    <TableCell style={{ paddingBottom: 0, paddingTop: 0,backgroundColor:'lightgrey' }} colSpan={8}>
         <Collapse in={open} timeout="auto" unmountOnExit>
-        <Box margin={1}>
+        <Box margin={1} >
             <Typography variant="h6" gutterBottom component="div">
-            History
+              Description
             </Typography>
             <div>{row.history}</div>
+            {/* ****************************************************************************************** */}
+            <CommentBox data = {row}/>
+            {/* ****************************************************************************************** */}
         </Box>
         </Collapse>
     </TableCell>
@@ -107,6 +131,7 @@ const TableStructure = (props) =>{
                   <TableCell align="right">Department</TableCell>
                   <TableCell align="right">Date</TableCell>
                   <TableCell align="right">Status</TableCell>
+                  {GetApprovalCell()}
               </TableRow>
               </TableHead>
               <TableBody>

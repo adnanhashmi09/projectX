@@ -80,6 +80,8 @@ render(){
         }
        
         const url = `/api/${authUser.uid}/addWork`
+        //updates and fetches new data from the backend
+        //the received data is set in the context which leads to rerendering of depenedent components
         axios.post(url,{
             work:[send]
         }).then((authUser)=>{

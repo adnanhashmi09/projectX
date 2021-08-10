@@ -7,7 +7,10 @@ import axios from 'axios'
 import FirebaseContext from '../Firebase/Context';
 import { Link } from 'react-router-dom';
 import AuthUserContext from '../../Contexts/AuthUserContext';
-import TeamDataContext from '../../Contexts/TeamDataContext'
+import TeamDataContext from '../../Contexts/TeamDataContext';
+import ProfileUpdate from '../ProfileUpdate';
+import RefreshContext from '../../Contexts/RefreshContext';
+
 
 class App extends Component{
     constructor(){
@@ -16,19 +19,22 @@ class App extends Component{
         res:null,
         userData:null,
         authUser :null,
+        refresh :1,
         teamData:[],
       }
     }
     setupContexts = (authUser) =>{
-      // console.log("AU",authUser.uid)
+      console.log('setting up contexts')
+
       axios.get(`/api/${authUser.uid}/getUser`).then( (res)=> {
-        // console.log('response',res.data)
         this.setState({authUser:res.data})
       }).then(
         axios.get('/api/getTeamData').then((res)=>{
           this.setState({teamData:res.data})
         })
-      )
+      ).catch((err)=>{
+        console.log(err)
+      })
     }
     componentDidMount(){
       
@@ -50,14 +56,25 @@ class App extends Component{
   
   render(){
     let firebase = this.context;
-    // console.log(this.state.teamData)
+    console.log('app refreshed')
     return(
-      <AuthUserContext.Provider value = {{authUser:this.state.authUser,setAuthUser:(authUser)=>{this.setState({authUser})}}}>
+      <AuthUserContext.Provider value = {{
+        authUser:this.state.authUser,
+        setAuthUser:(authUser)=>{this.setState({authUser})},
+        refresh:this.state.refresh,
+        setRefresh:() => {this.setState({refresh:!this.state.refresh})}
+        }}>
         <Router>
           <div>
-            <TeamDataContext.Provider value = {this.state.teamData}>
+            <TeamDataContext.Provider value = {{
+               teamData : this.state.teamData,
+               setTeamData : (teamData)=>{this.setState({teamData})}
+            }}>
+              {/* <RefreshContext.Provider value = {{refresh:this.state.refresh,setRefresh : ()=>{this.setState({refresh:!this.state.refresh})}}}> */}
                 <Route  path = "/home" render = {() =><Drawer/> }/>
                 <Route exact path = {ROUTES.SIGN_IN} component = {SignInPage}/>
+                <Route exact path = {ROUTES.PROFILE_UPDATE} component = {ProfileUpdate}/>
+               {/* </RefreshContext.Provider> */}
             </TeamDataContext.Provider>
           </div>
       </Router>
