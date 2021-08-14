@@ -23,11 +23,16 @@ const userSchema = new Schema({
         status : String,
         dateIssued : Date,
         dateApproved : Date,
-        approvers :[{
-            name:String,
-        }],
+        approvals :[String],
+        denials : [String],
         comments:[{
             name:String,
+            uid:String,
+            text:String,
+        }],
+        remarks:[{
+            name:String,
+            uid:String,
             text:String,
         }]
     }]

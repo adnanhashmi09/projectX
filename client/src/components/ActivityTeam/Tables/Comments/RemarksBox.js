@@ -1,29 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { Divider, Avatar, Grid, Paper } from "@material-ui/core";
-import TeamDataContext from "../../../Contexts/TeamDataContext";
+import { Divider, Avatar, Grid, Paper, IconButton } from "@material-ui/core";
+import TeamDataContext from "../../../../Contexts/TeamDataContext";
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios";
-import AuthUserContext from "../../../Contexts/AuthUserContext";
-
+import AuthUserContext from "../../../../Contexts/AuthUserContext";
+import SendIcon from '@material-ui/icons/Send';
 // import "./styles.css";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    '& .MuiTextField-root': {
+  root:{
       margin: theme.spacing(1),
-      width: '25ch',
+      // width: '25ch',
+      display:'flex',
+      alignItems:'center',
+      
     },
-  },
+  
 }));
 
-const getComments = (data)=>{
+const getRemarks = (data)=>{
   if(!data) return
-  if(!data.comments) return 
-  const comments = data.comments
+  if(!data.remarks) return 
+//   console.log(data)
+  const remarks = data.remarks
   const name = data.name
-  const res = comments.map(comment => {
+  const res = remarks.map(remark => {
     return (
     <div>
       <Grid container wrap="nowrap" spacing={2}>
@@ -31,9 +34,9 @@ const getComments = (data)=>{
         <Avatar alt="net slow hai" src={imgLink} />
       </Grid>
       <Grid justifyContent="left" item xs zeroMinWidth>
-        <h4 style={{ margin: 0, textAlign: "left" }}>{comment.name}</h4>
+        <h4 style={{ margin: 0, textAlign: "left" }}>{remark.name}</h4>
         <p style={{ textAlign: "left" }}>
-          {comment.text}
+          {remark.text}
         </p>
       </Grid>
       </Grid>
@@ -44,9 +47,7 @@ const getComments = (data)=>{
   return res;
 }
 
-
-
-const NewComment = (data)=>{
+const NewRemark = (data)=>{
   // console.log(data)
   const classes = useStyles();
 
@@ -58,7 +59,7 @@ const NewComment = (data)=>{
   const onSubmit = (e)=>{
     e.preventDefault();
     setText("");
-    const url = `/api/${authUser.uid}/teamActivity/addComment`;
+    const url = `/api/${authUser.uid}/teamActivity/addRemark`;
     axios.post(url,{
       uid:data.userId,
       _id:data._id,
@@ -81,9 +82,9 @@ const NewComment = (data)=>{
       <Avatar alt="Remy Sharp" src={imgLink} />
     </Grid>
     <Grid justifyContent="left" item xs zeroMinWidth>
-      <h4 style={{ margin: 0, textAlign: "left" }}>Michel Michel</h4>
+      <h4 style={{ margin: 0, textAlign: "left" }}>{data.name}</h4>
 
-      <form className={classes.root} noValidate autoComplete="off" onSubmit = {onSubmit}>
+      <form className={classes.root} noValidate autoComplete="off" onSubmit = {onSubmit} >
         <TextField
             style ={{width:'80%'}}
             id="outlined-textarea"
@@ -94,9 +95,9 @@ const NewComment = (data)=>{
             variant="outlined"
             onChange = {(e)=>{setText(e.target.value);}}
           />
-          <label>
-            <input type = 'submit' disabled = {!authUser}/>
-          </label>
+          <IconButton color="primary" aria-label="approve" type = "submit" onClick = {onSubmit} >
+            <SendIcon />
+          </IconButton>
       </form>
     </Grid>
   </Grid>
@@ -114,10 +115,10 @@ function App(props) {
 
   return (
     <div style={{ }} className="App">
-      <h2>Comments</h2>
+      <h2>Remarks</h2>
         <Paper style={{ padding: "20px 10px" }}>
-        {getComments(data)}
-        {NewComment(data)}
+        {getRemarks(data)}
+        {NewRemark(data)}
       </Paper>
     </div>
   );

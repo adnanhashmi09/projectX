@@ -70,8 +70,11 @@ router.post('/:uid/teamActivity/addComment',async(req,res,next)=>{
         {"uid":data.uid,"work._id":data._id},
         {"$push":
             {"work.$.comments":
-                {name:data.name,
-                text:data.text}
+                {
+                name:data.name,
+                text:data.text,
+                uid:data.uid
+                }
             }
         }
         ,async function(err,doc){
@@ -81,11 +84,89 @@ router.post('/:uid/teamActivity/addComment',async(req,res,next)=>{
         }
     );
 });
- 
+router.post('/:uid/teamActivity/addRemark',async(req,res,next)=>{
+    const data = req.body;
+    // console.log(data)
+    User.findOneAndUpdate(
+        {"uid":data.uid,"work._id":data._id},
+        {"$push":
+            {"work.$.remarks":
+                {
+                name:data.name,
+                text:data.text,
+                uid:data.uid,
+                }
+            }
+        }
+        ,async function(err,doc){
+            if(err) return next(err)
+            const data = await User.find({});
+            return res.send(data);
+        }
+    );
+});
 router.post('/:uid/processActivity',async(req,res,next)=>{
     const data = req.body;
-    console.log(data);
-    return res.send(200)
+    console.log(data)
+
+    //unprocessable entity
+    if(data.verdict === 'toBeDecided') res.send(422);
+    
+    //if we want to add an approval
+    if(data.text){
+        // User.findOneAndUpdate(
+        //     {"uid":data.activityUserId,"work._id":data.activityId},
+        //     {$push:
+        //         {
+        //            "work.$.remarks":{
+        //                text:data.text,
+        //                uid:data.approverId,
+        //            }
+        //         }
+        //     },
+        //     function(err,doc){
+        //         if(err) {return next(err);}
+        //     }
+        // )
+    }
+    if(data.verdict === 'approve'){
+        User.findOneAndUpdate(
+            {"uid":data.activityUserId,"work._id":data.activityId},
+            {$push:
+                {
+                   "work.$.approvals": data.approverId,
+                }
+            },
+            {$set: {"work.status":'Approved',}
+            },
+            function(err,doc){
+                if(err) {return next(err);}
+                console.log(doc)
+                res.status(201).send({response:doc});
+            }
+        )    
+        // return res.send(200)
+    }
+    else{
+        //append in denials list
+        User.findOneAndUpdate(
+            {"uid":data.activityUserId,"work._id":data.activityId},
+            {$push:
+                {
+                    "work.$.denials": data.uid,
+                }
+            },
+            {$set:
+                {
+                    "work.status":'Denied',
+                }
+            },
+            function(err,doc){
+                if(err) {res.send(err); return;}
+                res.status(201).send({response:doc});
+            }
+        )    
+    }
 });
 
 

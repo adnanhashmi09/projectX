@@ -8,12 +8,12 @@ import axios from 'axios'
 import AddIcon from '@material-ui/icons/Add';
 import { Fab } from "@material-ui/core";
 import AuthUserContext from "../../../Contexts/AuthUserContext";
-import CommentBox from './CommentBox'
+import CommentBox from './Comments/CommentBox'
 import DoneIcon from '@material-ui/icons/Done';
 import Done from "@material-ui/icons/Done";
 import { IconButton } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
-// import Loader from './Loader'
+
 
 function getModalStyle() {
 const top = 50 
@@ -22,7 +22,6 @@ return {
     top: `${top}%`,
     left: `${left}%`,
     transform: `translate(-${top}%, -${left}%)`,
-    // height:'200px',
     display:'flex',
     flexDirection:'column',
     alignItems:'center',  
@@ -44,6 +43,18 @@ const useStyles = theme => ({
         height:'20%',
         border:'1px black solid '
     },
+    button:{
+        backgroundColor: 'lightBlue',
+        borderRadius: 3,
+        border: 0,
+        color:'white',
+        textTransform: 'none',
+        fontFamily:'Lato',
+    },
+    iconButton:{
+        display: "flex",
+        flexDirection: "column"
+    }
 });
 
 class SimpleModal extends Component{
@@ -53,10 +64,10 @@ constructor(props){
         open:false,
         value:'',
         verdict: 'toBeDecided',
-        // isLoading:!props.isTableReady,
     }
 }
 render(){
+    const {data} = this.props;
     const {classes} = this.props;
     const modalStyle = getModalStyle();
 
@@ -68,35 +79,35 @@ render(){
         this.setState({open:false});
     };
 
-    const handleOnChange = (e) =>{
-        this.setState({[e.target.name]:e.target.value})
-    }
     const onSubmit = (e) =>{
         e.preventDefault()
         handleClose();
         const authUser = this.context.authUser
         if(!authUser) return 
-
+        console.log(data,'this data')
         const setAuthUser = this.context.setAuthUser
         const send = {
             verdict:this.state.verdict,
             text:this.state.value,
-            uid:authUser.uid,
-            activityId:""
+            activityUserId:data.userId,
+            activityId:data._id,
+            approverId:authUser.uid,
+            //_id is activity id
         }
+        console.log(send);
+
         const url = `/api/${authUser.uid}/processActivity`;
-        axios.post(url,{work:send}).then((res)=>{
-            console.log('inside response')
+        axios.post(url,send).then((res)=>{
+            console.log('Process Activity ',res)
         });
     }
     return (
         <div>
         {
-            <button size = "medium" color="primary" clasaName = {classes.root} onClick = {handleOpen} disabled = {this.state.isLoading}>
+            <Button variant="contained" size="small" className={classes.button} onClick = {handleOpen}>
                 Process
-            </button>
+            </Button>
         }
-
             <Modal
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
@@ -118,12 +129,15 @@ render(){
                             style = {{width:'80%'}}
                             size = 'small'
                         />
-                        <IconButton color="secondary" aria-label="approve" type = "submit" onClick = {()=>{this.setState({verdict:'deny'})}}>
-                            <CloseIcon />
+                        <IconButton color="primary" aria-label="approve" type = "submit" onClick = {()=>{this.setState({verdict:'approve'})}} >
+                            <AddIcon />
                         </IconButton>
-                        <IconButton color="primary" aria-label="approve" type = "submit" onClick = {()=>{this.setState({verdict:'approve'})}}>
-                            <DoneIcon />
-                        </IconButton>
+                        <Button color="secondary" variant = 'outlined'  aria-label="approve" type = "submit" onClick = {()=>{this.setState({verdict:'deny'})}} disabled = {data.status !== 'Pending'}>
+                            Deny
+                        </Button>
+                        <Button color="primary" variant = 'outlined' aria-label="approve" type = "submit" onClick = {()=>{this.setState({verdict:'approve'})}} disabled = {data.status !== 'Pending'}>
+                            Approve
+                        </Button>
                     </form>
                 </div>
             </Modal>

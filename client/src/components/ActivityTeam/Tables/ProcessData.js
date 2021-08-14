@@ -31,7 +31,7 @@ export function getRowData(data){
     const rowData = [];
     if(!data) return
     data.forEach(doc=>{
-        const {title,description,category,status,dateIssued,name,comments,_id,userId} = doc
+        const {title,description,category,status,dateIssued,name,comments,remarks,_id,userId} = doc
         const res = {
           userId,
           _id,
@@ -42,6 +42,7 @@ export function getRowData(data){
           status,
           history:description,
           comments,
+          remarks,
         };
         rowData.push(res)
     })

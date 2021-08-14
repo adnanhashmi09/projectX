@@ -16,7 +16,8 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import AuthUserContext from '../../../Contexts/AuthUserContext'
 import ProcessActivity from './ProcessActivity';
-import CommentBox from './CommentBox'
+import CommentBox from './Comments/CommentBox'
+import CommentIndex from './Comments'
 const useButtonStyles = makeStyles({
     outer:{
         display:'flex',
@@ -46,12 +47,14 @@ const GetApprovalCell =()=>{
     <TableCell align = 'right'>Approve</TableCell>
   )
 }
-function GetApprovalCellButton(){
+function GetApprovalCellButton(data){
   const authUser = useContext(AuthUserContext).authUser
   if(!authUser) return null
   return(
     <TableCell align = 'right' >
-      <ProcessActivity/>
+      {/* ****************************************************************************************** */}
+      <ProcessActivity data = {data}/>
+      {/* ********************************************************************************************** */}
     </TableCell>
   )
 }
@@ -75,19 +78,21 @@ function Row(props) {
     <TableCell align="right">{row.category}</TableCell>
     <TableCell align="right">{row.date}</TableCell>
     <TableCell align="right">{row.status}</TableCell>
-    {GetApprovalCellButton()}
+    {GetApprovalCellButton(row)}
     </TableRow>
     <TableRow>
     {/* dropdown */}
-    <TableCell style={{ paddingBottom: 0, paddingTop: 0,backgroundColor:'lightgrey' }} colSpan={8}>
+    <TableCell style={{ paddingBottom: 0, paddingTop: 0,backgroundColor:'lightblue' }} colSpan={8}>
         <Collapse in={open} timeout="auto" unmountOnExit>
         <Box margin={1} >
             <Typography variant="h6" gutterBottom component="div">
               Description
             </Typography>
             <div>{row.history}</div>
+            <br></br>
+            <br></br>
             {/* ****************************************************************************************** */}
-            <CommentBox data = {row}/>
+            <CommentIndex data = {row}/>
             {/* ****************************************************************************************** */}
         </Box>
         </Collapse>
