@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -18,6 +18,9 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import axios from 'axios';
 import { useState } from 'react';
+import AuthUserContext from '../../../Contexts/AuthUserContext';
+import Modal from '../Modal';
+import getRows from './getRows';
 
 const useButtonStyles = makeStyles({
     outer:{
@@ -40,22 +43,7 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(doc) {
-  const {title,description,category} = doc
-  console.log('category',category)
-  const date = '11/01/19';
-  const status = 'approved'
-  return {
-    title,
-    category,
-    date,
-    status,
-    history: [
-        { date: '2020-01-05', customerId: '11091700', amount: 3 },
-        { date: '2020-01-02', customerId: 'Anonymous', amount: 1 },
-      ],
-  };
-}
+
 
 function Row(props) {
   const { row } = props;
@@ -86,7 +74,7 @@ function Row(props) {
             <Typography variant="h6" gutterBottom component="div">
             History
             </Typography>
-            <div>This is the description of the Work</div>
+            <div>{row.history}</div>
         </Box>
         </Collapse>
     </TableCell>
@@ -113,34 +101,34 @@ Row.propTypes = {
   }).isRequired,
 };
 
-const getRows = async() =>{
-  const response = await axios.get('/api/getUsers')
-  const data = response.data[0].work;
-  // console.log('data',data) 
-  let res = []
-  data.forEach(doc => {
-    res.push(createData(doc));
-  });
-  return res
-}
 
-const CollapsibleTable = () =>{
-
-  // rows has been initi qalized to an empty array
+const CollapsibleTable = (props) =>{
+  // rows has been initialized to an empty array
   const [rows,setRows] = useState([])
-  //useEffect fetches the data from backend server(vis getRows) and updates the state upon receiving
-  //this then rerenders the table and along with user's activities                                                     
+  const [isTableReady,setIsTableReady] = useState(false);
+  //this state is managed my add button component
+  //whenever an update is made to the activity table, the add button toggles this state(via props)
+  //then this table is renrender because use effect is listening to changes on refresh state.
+  const [refresh,setRefresh] = useState(false)
+  const refreshTable = () =>{
+    setRefresh(!refresh);
+  }
+  //response is the data sent back by the backend server.
+  //useEffect re-renders everytime [authUser,refresh] is changed.
+  //this then re-renders the table and along with user's activities   
+
+  const authUser = useContext(AuthUserContext).authUser;
   useEffect(()=>{
-    async function fetchData(){
-      try{
-        const data = await getRows()
-        setRows(data)
-      }catch(e){
-        console.log(e)
-      }
+    const fetchRowData = async () =>{
+      setIsTableReady(false)
+      if(!authUser) return
+      // const res = await axios.get(`/api/${authUser.uid}/getUserActivity`)
+      const res = authUser.work
+      setRows(getRows("Approved",res.data))
+      setIsTableReady(true)
     }
-    fetchData()
-  },[])
+    fetchRowData()
+  },[refresh,authUser])                                               
 
   const classes = useButtonStyles()
   return (
@@ -164,9 +152,7 @@ const CollapsibleTable = () =>{
             </TableBody>
         </Table>
         </TableContainer>
-        <Fab size = "medium" color="primary" clasaName = {classes.root} >
-            <AddIcon />
-        </Fab>
+        <Modal refreshTable = {refreshTable} isTableReady = {isTableReady}/>
     </div>
   );
 }

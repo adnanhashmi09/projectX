@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose')
 const keys = require('./config/keys')
-
+const ApiRoutes = require('./routes/ApiRoutes');
 require('./models/User')
 const User = mongoose.model('users');
 
@@ -13,43 +13,10 @@ mongoose.connect(keys.mongoURI,{
     useUnifiedTopology: true
 });
 
-app.get('/api/testdb', async (req,res) => {
-    const userSaved = await new User({
-        name:'Priyansh',
-        email:'priyanshkt67@gmail.com',
-        rollNumber : '2018UIT2606',
-        branch: 'IT',
+app.use(express.json())
+app.use('/api',ApiRoutes);
 
-        currentYear : 4,
-        department : 'Script',
-        designation : 'President',
 
-        work : [
-        {
-            title:'ProjectX',
-            description:'A WebApp for Ashwamedh',
-            category : 'Tech',
-        },
-        {
-            title:'ProjectXY',
-            description:'A WebApp for Ashwamedh',
-            category : 'Tech',
-        },
-    ]
-    }).save()
-   
-    // console.log(userSaved)
-    return res.send(userSaved)
-});
-app.get('/api/delete',async (req,res)=>{
-        const user = await User.deleteMany({name:'Priyansh'});
-        return res.send(user);
-    }
-)
-app.get('/api/getUsers',async(req,res)=>{
-    const users = await User.find({name:'Priyansh'});
-    return res.send(users)
-})
 
 const PORT = process.env.port | 5000
 app.listen(PORT)

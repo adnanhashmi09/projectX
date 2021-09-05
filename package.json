@@ -3,18 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "npm run start --prefix client",
+    "start": "nodemon node index.js",
+    "dev": "concurrently \"npm run start\" \"npm run client\" "
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "concurrently": "^6.2.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "firebase": "^8.7.1",
     "http-proxy-middleware": "^2.0.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.2",
-    "nodemon": "^2.0.9"
+    "nodemon": "^2.0.9",
+    "react-swipeable-views": "^0.14.0"
   }
 }
