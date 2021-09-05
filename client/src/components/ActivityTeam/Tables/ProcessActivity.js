@@ -44,7 +44,7 @@ const useStyles = theme => ({
         border:'1px black solid '
     },
     button:{
-        backgroundColor: 'lightBlue',
+        backgroundColor: '#99ccff',
         borderRadius: 3,
         border: 0,
         color:'white',
@@ -94,11 +94,10 @@ render(){
             approverId:authUser.uid,
             //_id is activity id
         }
-        console.log(send);
-
+        console.log(send,'sending to approve');
         const url = `/api/${authUser.uid}/processActivity`;
         axios.post(url,send).then((res)=>{
-            console.log('Process Activity ',res)
+            // console.log('Process Activity ',res)
         });
     }
     return (
@@ -118,9 +117,11 @@ render(){
 
                     <h2>Process Activity</h2>
                     <form onSubmit = {onSubmit} style = {{width:'100%',display:'flex',justifyContent:'center',marginBottom:'20px',alignItems:'center'}}>
-                        <TextField
+                        {/* do we need to have an 'Add Remark' option here. */}
+                        
+                        {/* <TextField
                             id="outlined-textarea"
-                            label="Private Comment"
+                            label="Remark"
                             // placeholder="Say something about this activit"
                             multiline
                             variant="outlined"
@@ -129,9 +130,9 @@ render(){
                             style = {{width:'80%'}}
                             size = 'small'
                         />
-                        <IconButton color="primary" aria-label="approve" type = "submit" onClick = {()=>{this.setState({verdict:'approve'})}} >
+                        <IconButton color="primary" aria-label="approve" type = "submit" onClick = {addRemark} >
                             <AddIcon />
-                        </IconButton>
+                        </IconButton> */}
                         <Button color="secondary" variant = 'outlined'  aria-label="approve" type = "submit" onClick = {()=>{this.setState({verdict:'deny'})}} disabled = {data.status !== 'Pending'}>
                             Deny
                         </Button>

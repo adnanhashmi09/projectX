@@ -37,6 +37,16 @@ const useRowStyles = makeStyles({
       borderBottom: 'unset',
     },
   },
+  description:{
+    border:'1px solid black',
+    marginBottom:'10px',backgroundColor:'white',
+    padding:'5px'
+  },
+  dropdownBG:{
+    backgroundColor:'#99ccff',
+    padding:'5px',
+
+  }
 });
 
 const GetApprovalCell =()=>{
@@ -47,12 +57,13 @@ const GetApprovalCell =()=>{
     <TableCell align = 'right'>Approve</TableCell>
   )
 }
+
 function GetApprovalCellButton(data){
   const authUser = useContext(AuthUserContext).authUser
   if(!authUser) return null
   return(
     <TableCell align = 'right' >
-      {/* ****************************************************************************************** */}
+      {/* ********************************************************************************************** */}
       <ProcessActivity data = {data}/>
       {/* ********************************************************************************************** */}
     </TableCell>
@@ -81,16 +92,18 @@ function Row(props) {
     {GetApprovalCellButton(row)}
     </TableRow>
     <TableRow>
-    {/* dropdown */}
-    <TableCell style={{ paddingBottom: 0, paddingTop: 0,backgroundColor:'lightblue' }} colSpan={8}>
+            {/* ************************************** DROPDOWN **************************************** */}
+    <TableCell className = {classes.dropdownBG} colSpan={8}>
         <Collapse in={open} timeout="auto" unmountOnExit>
         <Box margin={1} >
+          <div className = {classes.description} >
             <Typography variant="h6" gutterBottom component="div">
               Description
             </Typography>
             <div>{row.history}</div>
             <br></br>
             <br></br>
+          </div>
             {/* ****************************************************************************************** */}
             <CommentIndex data = {row}/>
             {/* ****************************************************************************************** */}

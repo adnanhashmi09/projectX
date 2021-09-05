@@ -26,6 +26,7 @@ router.post('/createUser', async(req,res)=>{
 
 //insert list of work
 router.post('/:uid/addWork',async(req,res)=>{
+    console.log(req.body.work)
     const arr = req.body.work;
     User.findOneAndUpdate(
         {uid:req.params.uid},
@@ -84,6 +85,44 @@ router.post('/:uid/teamActivity/addComment',async(req,res,next)=>{
         }
     );
 });
+router.post('/:uid/teamActivity/delete',async(req,res,next)=>{
+    const data = req.body;
+    const type = data.type;
+    // console.log(data);  
+
+    if(type == 'comment'){
+        User.findOneAndUpdate(
+            {"work._id":data.activityId},
+            {
+                $pull :{
+                    "work.$.comments":{"_id":data.typeId}
+                }
+            }
+            ,async function(err,doc){
+                console.log(doc.work)
+                if(err) return next(err)
+                const data = await User.find({});
+                return res.send(data);
+            }
+        );
+    }
+    else{
+        User.findOneAndUpdate(
+            {"work._id":data.activityId},
+            {
+                $pull :{
+                    "work.$.remarks":{"_id":data.typeId}
+                }
+            }
+            ,async function(err,doc){
+                console.log(doc.work)
+                if(err) return next(err)
+                const data = await User.find({});
+                return res.send(data);
+            }
+        );
+    }
+});
 router.post('/:uid/teamActivity/addRemark',async(req,res,next)=>{
     const data = req.body;
     // console.log(data)
@@ -107,59 +146,31 @@ router.post('/:uid/teamActivity/addRemark',async(req,res,next)=>{
 });
 router.post('/:uid/processActivity',async(req,res,next)=>{
     const data = req.body;
-    console.log(data)
-
+    
     //unprocessable entity
     if(data.verdict === 'toBeDecided') res.send(422);
-    
-    //if we want to add an approval
-    if(data.text){
-        // User.findOneAndUpdate(
-        //     {"uid":data.activityUserId,"work._id":data.activityId},
-        //     {$push:
-        //         {
-        //            "work.$.remarks":{
-        //                text:data.text,
-        //                uid:data.approverId,
-        //            }
-        //         }
-        //     },
-        //     function(err,doc){
-        //         if(err) {return next(err);}
-        //     }
-        // )
-    }
+
     if(data.verdict === 'approve'){
         User.findOneAndUpdate(
             {"uid":data.activityUserId,"work._id":data.activityId},
-            {$push:
-                {
-                   "work.$.approvals": data.approverId,
-                }
-            },
-            {$set: {"work.status":'Approved',}
+            {
+                $push:{"work.$.approvals": data.approverId,},
+                $set: {"work.$.status":'Approved',}
             },
             function(err,doc){
                 if(err) {return next(err);}
-                console.log(doc)
                 res.status(201).send({response:doc});
             }
         )    
-        // return res.send(200)
+        return res.send(200)
     }
     else{
         //append in denials list
         User.findOneAndUpdate(
             {"uid":data.activityUserId,"work._id":data.activityId},
-            {$push:
-                {
-                    "work.$.denials": data.uid,
-                }
-            },
-            {$set:
-                {
-                    "work.status":'Denied',
-                }
+            {
+                $push:{"work.$.denials": data.uid},
+                $set:{"work.$.status":'Denied',}
             },
             function(err,doc){
                 if(err) {res.send(err); return;}

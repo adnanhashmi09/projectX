@@ -18,8 +18,10 @@ export const filterData = (teamData,authUser,filters) =>{
     teamData.forEach(user => {
         //a user must only be able to see activities of their juniors
         if(user.currentYear >= authUser.currentYear) return
+        // if(!user.work) return
         if(getUser && getUser != user.name) return
         user.work.forEach(activity =>{
+            if(!activity) return 
             if(status === '' || activity.status === status) {activity.name = user.name ; activity.userId = user.uid ;filteredData.push(activity)};
         })
     });

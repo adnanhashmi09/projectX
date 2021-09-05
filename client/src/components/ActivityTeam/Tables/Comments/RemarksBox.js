@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from "axios";
 import AuthUserContext from "../../../../Contexts/AuthUserContext";
 import SendIcon from '@material-ui/icons/Send';
+import DeleteIcon from '@material-ui/icons/Delete';
 // import "./styles.css";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,25 +21,54 @@ const useStyles = makeStyles((theme) => ({
   
 }));
 
-const getRemarks = (data)=>{
+const GetRemarks = (data)=>{          
+
+  const classes = useStyles();
+  const deleteRemark = (e) =>{
+    console.log(e.currentTarget.value,'remark id')
+    const url = `/api/${authUser.uid}/teamActivity/delete`;
+    axios.post(url,{
+      userId:data.userId,
+      activityId:data._id,
+      typeId : e.currentTarget.value,
+      type:'remark'
+    }).then((res)=>{
+      console.log(res.data)
+      setTeamData(res.data)
+    }).catch((err)=>{
+      console.log(err);
+    })
+    //refreshing here
+    setRefresh()
+  }
+
+  const authUser = useContext(AuthUserContext).authUser;
+  const {refresh,setRefresh} = useContext(AuthUserContext);
+  const setTeamData = useContext(TeamDataContext).setTeamData;
+  
   if(!data) return
   if(!data.remarks) return 
-//   console.log(data)
+
   const remarks = data.remarks
   const name = data.name
   const res = remarks.map(remark => {
     return (
-    <div>
-      <Grid container wrap="nowrap" spacing={2}>
-      <Grid item>
-        <Avatar alt="net slow hai" src={imgLink} />
-      </Grid>
-      <Grid justifyContent="left" item xs zeroMinWidth>
-        <h4 style={{ margin: 0, textAlign: "left" }}>{remark.name}</h4>
-        <p style={{ textAlign: "left" }}>
-          {remark.text}
-        </p>
-      </Grid>
+      <div>
+      <Grid container wrap="nowrap" spacing={2} style = {{display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+        <div style = {{display:'flex',margin:'2px'}}>
+          <Grid item style = {{margin:'5px'}}>
+            <Avatar alt="net slow hai" src={imgLink} className = {classes.small} />
+          </Grid>
+          <Grid justifyContent="left" item xs zeroMinWidth style = {{margin:'5px'}}>
+            <h4 style={{ margin: 0, textAlign: "left" }}>{remark.name}</h4>
+            <p style={{ textAlign: "left" ,margin:'2px'}}>
+              {remark.text}
+            </p>
+          </Grid>
+        </div>
+        <IconButton value = {remark._id} onClick = {deleteRemark}>
+            <DeleteIcon></DeleteIcon>
+        </IconButton>
       </Grid>
       <Divider variant="fullWidth" style={{ margin: "10px 0" }} />
       </div>
@@ -77,27 +107,27 @@ const NewRemark = (data)=>{
   }
 
   return(
-    <Grid container wrap="nowrap" spacing={2}>
+   <Grid container wrap="nowrap" spacing={2}>
     <Grid item>
       <Avatar alt="Remy Sharp" src={imgLink} />
     </Grid>
     <Grid justifyContent="left" item xs zeroMinWidth>
-      <h4 style={{ margin: 0, textAlign: "left" }}>{data.name}</h4>
+      <h4 style={{ margin: 0, textAlign: "left" }}>{authUser.name}</h4>
 
       <form className={classes.root} noValidate autoComplete="off" onSubmit = {onSubmit} >
         <TextField
             style ={{width:'80%'}}
             id="outlined-textarea"
             size = "small"
-            placeholder="Placeholder"
+            placeholder="This remark will be visible to the publisher of this activity"
             multiline
             value = {text}
             variant="outlined"
             onChange = {(e)=>{setText(e.target.value);}}
-          />
-          <IconButton color="primary" aria-label="approve" type = "submit" onClick = {onSubmit} >
-            <SendIcon />
-          </IconButton>
+        />
+        <IconButton color="primary" aria-label="approve" type = "submit" onClick = {onSubmit} >
+          <SendIcon />
+        </IconButton>
       </form>
     </Grid>
   </Grid>
@@ -117,7 +147,7 @@ function App(props) {
     <div style={{ }} className="App">
       <h2>Remarks</h2>
         <Paper style={{ padding: "20px 10px" }}>
-        {getRemarks(data)}
+        {GetRemarks(data)}
         {NewRemark(data)}
       </Paper>
     </div>

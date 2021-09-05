@@ -28,7 +28,7 @@ const CollapsibleTable = () =>{
   const [rows,setRows] = useState([])
   //this state is managed my add button component
   //whenever an update is made to the activity table, the add button toggles this state(via props)
-  //then this table is renrender because use effect is listening to changes on refresh state.
+  //then this table is renrended because use effect is listening to changes on refresh state.
   // const [refresh,setRefresh] = useState(false)
   // const refreshTable = () =>{
   //   setRefresh(!refresh);

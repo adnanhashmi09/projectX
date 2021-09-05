@@ -78,6 +78,7 @@ render(){
             status:'Pending',
             dateIssued: new Date(),
         }
+        console.log(send,'sending this to backend');
        
         const url = `/api/${authUser.uid}/addWork`
         //updates and fetches new data from the backend
@@ -98,7 +99,6 @@ render(){
             <AddIcon /> 
             </Fab>
         }
-
             <Modal
                 aria-labelledby="simple-modal-title"
                 aria-describedby="simple-modal-description"
