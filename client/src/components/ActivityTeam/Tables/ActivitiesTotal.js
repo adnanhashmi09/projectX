@@ -53,6 +53,7 @@ const CollapsibleTable = () =>{
     <div>
       {/* this is the parent component for Filters and GetTable */}
       <Filters {...props}/>
+      {/* /************************************ */}
       <GetTable rows = {rows}/>
     </div>
   )

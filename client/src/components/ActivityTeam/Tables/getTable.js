@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -115,30 +115,14 @@ function Row(props) {
 );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
 const TableStructure = (props) =>{
-    const {rows} = props;
+
+    const rows = props.rows;
+   
     const classes = useButtonStyles()
     return (
       <div className = {classes.outer}>
-        
+  
           <TableContainer component={Paper} class = {classes.table}>
           <Table aria-label="collapsible table">
               <TableHead>
@@ -155,10 +139,9 @@ const TableStructure = (props) =>{
               <TableBody>
             {/* ********************************************************************************* */}
               {rows.map((row) => (
-                  <Row key={row.name} row={row} />
+                  <Row key={row.uid} row={row} />
               ))}
             {/* ********************************************************************************* */}
-
               </TableBody>
           </Table>
           </TableContainer>
