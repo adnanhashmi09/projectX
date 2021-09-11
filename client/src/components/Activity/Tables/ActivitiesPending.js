@@ -73,7 +73,7 @@ function Row(props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                Description
               </Typography>
               <div>{row.history}</div>
             </Box>
