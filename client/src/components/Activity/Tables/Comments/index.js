@@ -15,7 +15,6 @@ import UpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { green } from '@material-ui/core/colors';
 import Box from '@material-ui/core/Box';
 import CommentBox from './CommentBox';
-import RemarksBox from './RemarksBox';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -109,32 +108,7 @@ export default function FloatingActionButtonZoom(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="fullWidth"
-          aria-label="action tabs example"
-        >
-          <Tab label="Comments" {...a11yProps(0)} />
-          <Tab label="Remarks" {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <SwipeableViews
-        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-        index={value}
-        onChangeIndex={handleChangeIndex}
-      >
-        <TabPanel value={value} index={0} dir={theme.direction}>
-          {/* ****************************************************************************************** */}
-          <CommentBox data={props.data} />
-        </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-          <RemarksBox data={props.data} />
-        </TabPanel>
-      </SwipeableViews>
+      <CommentBox data={props.data} />
       {/* {fabs.map((fab, index) => (
         <Zoom
           key={fab.color}
