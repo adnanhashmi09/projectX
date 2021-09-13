@@ -8,12 +8,12 @@ import axios from 'axios'
 import AuthUserContext from '../../Contexts/AuthUserContext'
 import AddIcon from '@material-ui/icons/Add';
 import { Fab } from "@material-ui/core";
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress,Input,FormControl,InputLabel,Select,MenuItem} from "@material-ui/core";
 // import Loader from './Loader'
 
 function getModalStyle() {
-const top = 50 
-const left = 50 
+const top = 50
+const left = 50
 return {
     top: `${top}%`,
     left: `${left}%`,
@@ -23,6 +23,16 @@ return {
     alignItems:'center',
     justifyContent:'space-between',
 };
+}
+
+function getFormStyle()
+{
+       return {
+        display: 'inline-flex',
+        flexDirection: 'row',
+        flexWrap:'wrap',
+        justifyContent: 'space-between',
+    };
 }
 
 const useStyles = theme => ({
@@ -53,7 +63,7 @@ constructor(props){
 render(){
     const {classes} = this.props;
     const modalStyle = getModalStyle();
-
+    const formStyle=getFormStyle();
     const handleOpen = () => {
         this.setState({open:true});
     };
@@ -79,7 +89,7 @@ render(){
             dateIssued: new Date(),
         }
         console.log(send,'sending this to backend');
-       
+
         const url = `/api/${authUser.uid}/addWork`
         //updates and fetches new data from the backend
         //the received data is set in the context which leads to rerendering of depenedent components
@@ -89,14 +99,14 @@ render(){
             setAuthUser(authUser.data);
             this.props.refreshTable();
         }).then( this.setState({isLoading:false}))
-    
+
     }
 
     return (
         <div>
         {
             <Fab size = "medium" color="primary" clasaName = {classes.root} onClick = {handleOpen} disabled = {this.state.isLoading}>
-            <AddIcon /> 
+            <AddIcon />
             </Fab>
         }
             <Modal
@@ -107,26 +117,22 @@ render(){
             >
                 <div style={modalStyle} className={classes.paper}>
                     <h2>Add Activity</h2>
-                    <form onSubmit = {onSubmit} >
-                        <label>
-                            Title
-                            <input type = "text" name = "title" onChange = {handleOnChange} required = "true"/>
-                        </label>
-                        <label>
-                            Description
-                            <input type = "text" name = "description" onChange = {handleOnChange} required = "true"/>
-                        </label>
-                        <label>
-                            Category
-                            <select name = "category" onChange = {handleOnChange} required = "true">
-                                <option disabled selected value>Select</option>
-                                <option value = "script">Script</option>
-                                <option value = "online">Online</option>
-                            </select>
-                        </label>
-                        <label>
-                            <input type = 'submit'/>
-                        </label>
+                    <form onSubmit = {onSubmit}>
+<div style={formStyle}>
+          <TextField required id="outlined-title" label="Title" type="text" onChange={handleOnChange} required="true" variant="outlined" />
+<TextField required id="outlined-desc" label="Description" type="text" onChange={handleOnChange} required="true" variant="outlined" />
+<FormControl variant="outlined" className={classes.formControl}>
+       <InputLabel id="outlined-category-label">Category</InputLabel>
+       <Select onChange={handleOnChange} label="Age" required="true" value="Category">
+         <MenuItem value="None">
+           <em>None</em>
+         </MenuItem>
+         <MenuItem value="Script" ><em>Script</em></MenuItem>
+         <MenuItem value="Online"><em>Online</em></MenuItem>
+       </Select>
+     </FormControl>
+     <Button variant="contained" color="primary">Submit</Button>
+                    </div>
                     </form>
                 </div>
             </Modal>
