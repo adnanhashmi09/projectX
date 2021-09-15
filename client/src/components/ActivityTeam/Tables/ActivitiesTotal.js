@@ -44,7 +44,6 @@ const CollapsibleTable = () => {
     // console.log(refresh)
     if (!authUser) return;
     const res = teamData;
-
     setRows(getRows(res, authUser, filters));
   }, [authUser, refresh, status, user, teamData]);
 

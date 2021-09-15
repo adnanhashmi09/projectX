@@ -21,7 +21,7 @@ import { useState } from 'react';
 import Modal from '../Modal';
 import AuthUserContext from '../../../Contexts/AuthUserContext';
 import getRows from './getRows';
-import CommentIndex from './Comments';
+import CommentIndex from './Comments'
 
 const useButtonStyles = makeStyles({
   outer: {
@@ -77,7 +77,7 @@ function Row(props) {
                 Description
               </Typography>
               <div>{row.history}</div>
-              <br />
+             
               <br />
               <CommentIndex data={row} />
             </Box>
@@ -132,10 +132,9 @@ const CollapsibleTable = (props) => {
       setIsTableReady(true);
     };
     fetchRowData();
-    console.log(rows);
   }, [authUser, refresh]);
 
-  console.log(authUser);
+
 
   const classes = useButtonStyles();
   return (
