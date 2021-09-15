@@ -44,6 +44,10 @@ const CollapsibleTable = () => {
     // console.log(refresh)
     if (!authUser) return;
     const res = teamData;
+<<<<<<< HEAD
+=======
+
+>>>>>>> personal-activity-page
     setRows(getRows(res, authUser, filters));
   }, [authUser, refresh, status, user, teamData]);
 

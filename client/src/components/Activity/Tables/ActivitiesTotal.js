@@ -21,6 +21,11 @@ import { useState } from 'react';
 import Modal from '../Modal';
 import AuthUserContext from '../../../Contexts/AuthUserContext';
 import getRows from './getRows';
+<<<<<<< HEAD
+=======
+import CommentIndex from './Comments';
+
+>>>>>>> personal-activity-page
 const useButtonStyles = makeStyles({
   outer: {
     display: 'flex',
@@ -75,6 +80,12 @@ function Row(props) {
                 Description
               </Typography>
               <div>{row.history}</div>
+<<<<<<< HEAD
+=======
+              <br />
+              <br />
+              <CommentIndex data={row} />
+>>>>>>> personal-activity-page
             </Box>
           </Collapse>
         </TableCell>
@@ -127,8 +138,16 @@ const CollapsibleTable = (props) => {
       setIsTableReady(true);
     };
     fetchRowData();
+<<<<<<< HEAD
   }, [authUser, refresh]);
 
+=======
+    console.log(rows);
+  }, [authUser, refresh]);
+
+  console.log(authUser);
+
+>>>>>>> personal-activity-page
   const classes = useButtonStyles();
   return (
     <div className={classes.outer}>
