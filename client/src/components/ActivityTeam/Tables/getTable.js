@@ -14,22 +14,22 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import AuthUserContext from '../../../Contexts/AuthUserContext'
+import AuthUserContext from '../../../Contexts/AuthUserContext';
 import ProcessActivity from './ProcessActivity';
-import CommentBox from './Comments/CommentBox'
-import CommentIndex from './Comments'
+import CommentBox from './Comments/CommentBox';
+import CommentIndex from './Comments';
 const useButtonStyles = makeStyles({
-    outer:{
-        display:'flex',
-        justifyContent:'space-evenly',
-        width:'100%',
-        // border : '2px solid black'
-    },
-    table:{
-        width:'90%',
-        border:'1px solid black'
-    },
-})
+  outer: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    width: '100%',
+    // border : '2px solid black'
+  },
+  table: {
+    width: '90%',
+    border: '1px solid black',
+  },
+});
 
 const useRowStyles = makeStyles({
   root: {
@@ -37,37 +37,35 @@ const useRowStyles = makeStyles({
       borderBottom: 'unset',
     },
   },
-  description:{
-    border:'1px solid black',
-    marginBottom:'10px',backgroundColor:'white',
-    padding:'5px'
+  description: {
+    border: '1px solid black',
+    marginBottom: '10px',
+    backgroundColor: 'white',
+    padding: '5px',
   },
-  dropdownBG:{
-    backgroundColor:'#99ccff',
-    padding:'5px',
-
-  }
+  dropdownBG: {
+    backgroundColor: '#99ccff',
+    padding: '5px',
+  },
 });
 
-const GetApprovalCell =()=>{
+const GetApprovalCell = () => {
   const authUser = useContext(AuthUserContext).authUser;
-  if(!authUser) return null;
+  if (!authUser) return null;
 
-  return(
-    <TableCell align = 'right'>Approve</TableCell>
-  )
-}
+  return <TableCell align="right">Approve</TableCell>;
+};
 
-function GetApprovalCellButton(data){
-  const authUser = useContext(AuthUserContext).authUser
-  if(!authUser) return null
-  return(
-    <TableCell align = 'right' >
+function GetApprovalCellButton(data) {
+  const authUser = useContext(AuthUserContext).authUser;
+  if (!authUser) return null;
+  return (
+    <TableCell align="right">
       {/* ********************************************************************************************** */}
-      <ProcessActivity data = {data}/>
+      <ProcessActivity data={data} />
       {/* ********************************************************************************************** */}
     </TableCell>
-  )
+  );
 }
 
 function Row(props) {
@@ -77,75 +75,98 @@ function Row(props) {
 
   return (
     <React.Fragment>
-    
-    <TableRow className={classes.root}>
-    <TableCell>
-        <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-        {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        </IconButton>
-    </TableCell>
-    <TableCell component="th" scope="row">{row.name}</TableCell>
-    <TableCell component="th" scope="row">{row.title}</TableCell>
-    <TableCell align="right">{row.category}</TableCell>
-    <TableCell align="right">{row.date}</TableCell>
-    <TableCell align="right">{row.status}</TableCell>
-    {GetApprovalCellButton(row)}
-    </TableRow>
-    <TableRow>
-            {/* ************************************** DROPDOWN **************************************** */}
-    <TableCell className = {classes.dropdownBG} colSpan={8}>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-        <Box margin={1} >
-          <div className = {classes.description} >
-            <Typography variant="h6" gutterBottom component="div">
-              Description
-            </Typography>
-            <div>{row.history}</div>
-            <br></br>
-            <br></br>
-          </div>
-            {/* ****************************************************************************************** */}
-            <CommentIndex data = {row}/>
-            {/* ****************************************************************************************** */}
-        </Box>
-        </Collapse>
-    </TableCell>
-    </TableRow> 
-  </React.Fragment>
-);
+      <TableRow className={classes.root}>
+        <TableCell>
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.name}
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.title}
+        </TableCell>
+        <TableCell align="right">{row.category}</TableCell>
+        <TableCell align="right">{row.date}</TableCell>
+        <TableCell align="right">{row.status}</TableCell>
+        {GetApprovalCellButton(row)}
+      </TableRow>
+      <TableRow>
+        {/* ************************************** DROPDOWN **************************************** */}
+        <TableCell className={classes.dropdownBG} colSpan={8}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <div className={classes.description}>
+                <Typography variant="h6" gutterBottom component="div">
+                  Description
+                </Typography>
+                <div>{row.history}</div>
+                <br></br>
+                <br></br>
+              </div>
+              {/* ****************************************************************************************** */}
+              <CommentIndex data={row} />
+              {/* ****************************************************************************************** */}
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </React.Fragment>
+  );
 }
 
-const TableStructure = (props) =>{
+Row.propTypes = {
+  row: PropTypes.shape({
+    calories: PropTypes.number.isRequired,
+    carbs: PropTypes.number.isRequired,
+    fat: PropTypes.number.isRequired,
+    history: PropTypes.arrayOf(
+      PropTypes.shape({
+        amount: PropTypes.number.isRequired,
+        customerId: PropTypes.string.isRequired,
+        date: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+    name: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    protein: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
-    const rows = props.rows;
-   
-    const classes = useButtonStyles()
-    return (
-      <div className = {classes.outer}>
-  
-          <TableContainer component={Paper} className = {classes.table}>
-          <Table aria-label="collapsible table">
-              <TableHead>
-              <TableRow>
-                  <TableCell />
-                  <TableCell>Name</TableCell>
-                  <TableCell>Title</TableCell>
-                  <TableCell align="right">Department</TableCell>
-                  <TableCell align="right">Date</TableCell>
-                  <TableCell align="right">Status</TableCell>
-                  {GetApprovalCell()}
-              </TableRow>
-              </TableHead>
-              <TableBody>
+const TableStructure = (props) => {
+  const { rows } = props;
+  const classes = useButtonStyles();
+  return (
+    <div className={classes.outer}>
+      <TableContainer component={Paper} class={classes.table}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Name</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell align="right">Department</TableCell>
+              <TableCell align="right">Date</TableCell>
+              <TableCell align="right">Status</TableCell>
+              {GetApprovalCell()}
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {/* ********************************************************************************* */}
-              {rows.map((row,index) => (
-                  <Row key={index} row={row} />
-              ))}
+            {rows.map((row) => (
+              <Row key={row.name} row={row} />
+            ))}
             {/* ********************************************************************************* */}
-              </TableBody>
-          </Table>
-          </TableContainer>
-      </div>
-    );
-}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {/* <Modal refreshTable = {refreshTable} isTableReady = {isTableReady}/> */}
+    </div>
+  );
+};
 export default TableStructure;
