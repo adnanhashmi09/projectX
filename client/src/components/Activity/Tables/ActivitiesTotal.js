@@ -42,15 +42,16 @@ const useRowStyles = makeStyles({
   },
 });
 
-
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  // const [isEditOn,setIsEditOn] = React.useState(false);
   const classes = useRowStyles();
 
   return (
-    <React.Fragment>
     
+    <React.Fragment>
+    {/* //add a switch in this */}
     <TableRow className={classes.root}>
     <TableCell>
         <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>

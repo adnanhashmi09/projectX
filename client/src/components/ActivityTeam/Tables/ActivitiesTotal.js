@@ -38,7 +38,7 @@ const CollapsibleTable = () =>{
   //this then rerenders the table and along with user's activities   
 
   const authUser = useContext(AuthUserContext).authUser;
-  const {refresh,setRefresh} = useContext(AuthUserContext);
+  const {refresh,setRefresh} = useContext(RefreshContext);
   const teamData = useContext(TeamDataContext).teamData;
 
   useEffect(()=>{
@@ -53,6 +53,7 @@ const CollapsibleTable = () =>{
     <div>
       {/* this is the parent component for Filters and GetTable */}
       <Filters {...props}/>
+      {/* /************************************ */}
       <GetTable rows = {rows}/>
     </div>
   )

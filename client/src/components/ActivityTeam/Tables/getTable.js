@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -111,35 +111,19 @@ function Row(props) {
         </Collapse>
     </TableCell>
     </TableRow> 
-</React.Fragment>
+  </React.Fragment>
 );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number.isRequired,
-        customerId: PropTypes.string.isRequired,
-        date: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    name: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
-  }).isRequired,
-};
-
 const TableStructure = (props) =>{
-    const {rows} = props;
+
+    const rows = props.rows;
+   
     const classes = useButtonStyles()
     return (
       <div className = {classes.outer}>
-        
-          <TableContainer component={Paper} class = {classes.table}>
+  
+          <TableContainer component={Paper} className = {classes.table}>
           <Table aria-label="collapsible table">
               <TableHead>
               <TableRow>
@@ -154,15 +138,13 @@ const TableStructure = (props) =>{
               </TableHead>
               <TableBody>
             {/* ********************************************************************************* */}
-              {rows.map((row) => (
-                  <Row key={row.name} row={row} />
+              {rows.map((row,index) => (
+                  <Row key={index} row={row} />
               ))}
             {/* ********************************************************************************* */}
-
               </TableBody>
           </Table>
           </TableContainer>
-          {/* <Modal refreshTable = {refreshTable} isTableReady = {isTableReady}/> */}
       </div>
     );
 }
