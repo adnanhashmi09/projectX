@@ -132,7 +132,10 @@ const CollapsibleTable = (props) => {
       setIsTableReady(true);
     };
     fetchRowData();
+    console.log(rows);
   }, [authUser, refresh]);
+
+  console.log(authUser);
 
   const classes = useButtonStyles();
   return (
