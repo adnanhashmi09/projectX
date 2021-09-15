@@ -38,7 +38,7 @@ const CollapsibleTable = () =>{
   //this then rerenders the table and along with user's activities   
 
   const authUser = useContext(AuthUserContext).authUser;
-  const {refresh,setRefresh} = useContext(AuthUserContext);
+  const {refresh,setRefresh} = useContext(RefreshContext);
   const teamData = useContext(TeamDataContext).teamData;
 
   useEffect(()=>{

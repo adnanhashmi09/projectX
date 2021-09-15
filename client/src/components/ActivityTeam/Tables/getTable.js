@@ -111,7 +111,7 @@ function Row(props) {
         </Collapse>
     </TableCell>
     </TableRow> 
-</React.Fragment>
+  </React.Fragment>
 );
 }
 
@@ -123,7 +123,7 @@ const TableStructure = (props) =>{
     return (
       <div className = {classes.outer}>
   
-          <TableContainer component={Paper} class = {classes.table}>
+          <TableContainer component={Paper} className = {classes.table}>
           <Table aria-label="collapsible table">
               <TableHead>
               <TableRow>
@@ -138,14 +138,13 @@ const TableStructure = (props) =>{
               </TableHead>
               <TableBody>
             {/* ********************************************************************************* */}
-              {rows.map((row) => (
-                  <Row key={row.uid} row={row} />
+              {rows.map((row,index) => (
+                  <Row key={index} row={row} />
               ))}
             {/* ********************************************************************************* */}
               </TableBody>
           </Table>
           </TableContainer>
-          {/* <Modal refreshTable = {refreshTable} isTableReady = {isTableReady}/> */}
       </div>
     );
 }
