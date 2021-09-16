@@ -5,7 +5,7 @@ export default function fetRows(status, teamData, authUser) {
   teamData.forEach(user => {
     if(user.uid != authUser.uid) return
     user.work.forEach(activity =>{
-        if(!activity) return 
+        if(!activity || activity.status!= status && status!='Total') return 
         userActivity.push(createData(activity));
     });
   });
