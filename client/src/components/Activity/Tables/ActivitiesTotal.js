@@ -14,14 +14,13 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import axios from 'axios';
 import { useState } from 'react';
 import Modal from '../Modal';
 import AuthUserContext from '../../../Contexts/AuthUserContext';
 import getRows from './getRows';
 import CommentIndex from './Comments'
+import RefreshContext from '../../../Contexts/RefreshContext';
+import TeamDataContext from '../../../Contexts/TeamDataContext';
 
 const useButtonStyles = makeStyles({
   outer: {
@@ -78,9 +77,8 @@ function Row(props) {
                 Description
               </Typography>
               <div>{row.history}</div>
-             
               <br />
-              <CommentIndex data={row} />
+              <CommentIndex data={row} refreshTable = {props.refreshTable} />
             </Box>
           </Collapse>
         </TableCell>
@@ -115,27 +113,28 @@ const CollapsibleTable = (props) => {
   //whenever an update is made to the activity table, the add button toggles this state(via props)
   //then this table is renrender because use effect is listening to changes on refresh state.
   const [refresh, setRefresh] = useState(false);
+
   const refreshTable = () => {
     setRefresh(!refresh);
+    console.log('refresh called');
   };
   //response is the data sent back by the backend server.
   //useEffect re renders everytime [authUser,refresh] is changed.
   //this then rerenders the table and along with user's activities
-
+  // const {refresh, setRefresh} = useContext(RefreshContext);
   const authUser = useContext(AuthUserContext).authUser;
+  const teamData = useContext(TeamDataContext).teamData;
+
   useEffect(() => {
     const fetchRowData = async () => {
       setIsTableReady(false);
       if (!authUser) return;
-      // const res = await axios.get(`/api/${authUser.uid}/getUserActivity`)
-      const res = authUser.work;
-      setRows(getRows('Total', res));
+      const data = teamData;
+      setRows(getRows('Total', data, authUser));
       setIsTableReady(true);
     };
     fetchRowData();
-  }, [authUser, refresh]);
-
-
+  }, [authUser, refresh, teamData]);
 
   const classes = useButtonStyles();
   return (
@@ -153,7 +152,7 @@ const CollapsibleTable = (props) => {
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <Row key={row.name} row={row} />
+              <Row key={row.name} row={row} refreshTable = {refreshTable}/>
             ))}
           </TableBody>
         </Table>

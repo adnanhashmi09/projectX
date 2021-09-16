@@ -25,10 +25,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const GetComments = (data) => {
+const GetComments = (props) => {
   //function to delete this comment
+  const {data, refreshTable} = props;
   const authUser = useContext(AuthUserContext).authUser;
-  const { refresh, setRefresh } = useContext(AuthUserContext);
+  // const { refresh, setRefresh } = useContext(AuthUserContext);
   const setTeamData = useContext(TeamDataContext).setTeamData;
 
   const deleteComment = (e) => {
@@ -41,14 +42,11 @@ const GetComments = (data) => {
         type: 'comment',
       })
       .then((res) => {
-        //console.log(res.data);
         setTeamData(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    //refreshing here
-    setRefresh();
   };
   const classes = useStyles();
   if (!data) return;
@@ -99,15 +97,12 @@ const GetComments = (data) => {
   return res;
 };
 
-const NewComment = (data) => {
-  // console.log(data)
+const NewComment = (props) => {
   const classes = useStyles();
 
   const [text, setText] = useState('');
   const authUser = useContext(AuthUserContext).authUser;
-  const { refresh, setRefresh } = useContext(AuthUserContext);
   const setTeamData = useContext(TeamDataContext).setTeamData;
-
   const onSubmit = (e) => {
     e.preventDefault();
     setText('');
@@ -115,21 +110,19 @@ const NewComment = (data) => {
     const url = `/api/${authUser.uid}/teamActivity/addComment`;
     axios
       .post(url, {
-        _id: data._id,
+        _id: props.data._id,
         uid: authUser.uid,
         name: authUser.name,
         text,
         time: Date.now(),
       })
       .then((res) => {
-        //console.log(res.data);
         setTeamData(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-    //refreshing here
-    setRefresh();
+
   };
   return (
     <Grid container wrap="nowrap" spacing={2}>
@@ -174,9 +167,9 @@ const imgLink =
   'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260';
 
 function App(props) {
-  const { data } = props;
-  const { refresh } = useContext(AuthUserContext);
   //process commments
+  const {data} = props
+  console.log(props,'for comment')
   useEffect(() => {
     console.log(data, 'refreshed');
   }, [data]);
@@ -185,8 +178,8 @@ function App(props) {
     <div style={{}} className="App">
       <h2>Comments</h2>
       <Paper style={{ padding: '20px 10px' }}>
-        {GetComments(data)}
-        {NewComment(data)}
+        {GetComments(props)}
+        {NewComment(props)}
       </Paper>
     </div>
   );
