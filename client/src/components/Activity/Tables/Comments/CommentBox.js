@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
   },
+  customHoverFocus: {
+    opacity:'60%',
+    "&:hover": {opacity:'100%', background: "none"},
+    transform:'scale(0.9)',
+  }
 }));
 
 const GetComments = (props) => {
@@ -86,7 +91,7 @@ const GetComments = (props) => {
               <p style={{ textAlign: 'left', margin: '2px' }}>{comment.text}</p>
             </Grid>
           </div>
-          <IconButton value={comment._id} onClick={deleteComment}>
+          <IconButton value={comment._id} onClick={deleteComment} className ={classes.customHoverFocus}>
             <DeleteIcon></DeleteIcon>
           </IconButton>
         </Grid>
